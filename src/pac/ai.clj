@@ -257,7 +257,7 @@
     (print-positional "WALL NEXT:" wvec)
     (print-positional "BEAN NEXT:" imbean)
     (print-positional "GHOST TERRITORY:" gvec)
-    (print-positional "GHOST TERRITORY:" bvec)
+    (print-positional "BEAN TERRITORY:" bvec)
     (print-positional "FINAL SCORE: " final-vec)
     final-vec
     ))

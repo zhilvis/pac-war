@@ -40,10 +40,10 @@
   {:body
    (cheshire/generate-string
      (merge body
-            {:Auth (auth "Inventi" session dev-pwd player @sq)}))
+            {:Auth (auth "Inventi" session prod-pwd player @sq)}))
    :headers {"Content-Type" "application/json"}})
 
 (defn post [player session path body]
   (http/post
-    (str dev-url (str "/json/" path))
+    (str prod-url (str "/json/" path))
     (post-params player session body)))

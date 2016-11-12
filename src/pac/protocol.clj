@@ -16,10 +16,12 @@
   {:Row y :Col x})
 
 (defn game-map [{:keys [Map TecmanPosition GhostPositions]}]
-  (let [{:keys [Rows]} Map
+  (let [{:keys [Width Height Rows]} Map
         cell-by-char {\# {:type :wall} \. {:type :cookie}}
         rows (->> Rows (map vec) (mapv #(mapv cell-by-char %)))]
-    {:map rows
+    {:width Width
+     :height Height
+     :map rows
      :tecman-position (to-position-vector TecmanPosition)
      :ghost-positions (mapv to-position-vector GhostPositions)}))
 
@@ -30,13 +32,11 @@
      :Mode                   "TECMAN"
      :Map                    {:Width  10
                               :Height 7
-                              :Rows   ["##########",
-                                       "#        #",
-                                       "#        #",
-                                       "#        #",
-                                       "#.######.#",
-                                       "#.... ...#",
-                                       "##########"]}
+                              :Rows   ["######",
+                                       "#    #",
+                                       "#.##.#",
+                                       "#....#",
+                                       "######"]}
      :TecmanPosition         {:Row 5, :Col 6}
      :PreviousTecmanPosition {:Row 4, :Col 6}
      :GhostPositions         [{:Row 1, :Col 9}

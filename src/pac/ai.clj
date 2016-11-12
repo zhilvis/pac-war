@@ -350,13 +350,13 @@
            {:dir :right :score right}
            {:dir :bot :score bot}
           ]
-          the-dir (:dir (first (sort-by :score < svec)))
+          the-dir (:dir (first (sort-by :score > svec)))
           ]
       (case the-dir
-        :left [[(dec tecx) tecy]]
-        :top [[tecx (dec tecy)]]
-        :right [[(inc tecx) tecy]]
-        :bot [[tecx (inc tecy)]])
+        :left [[tecy (dec tecx)]]
+        :top [[(dec tecy) tecx]]
+        :right [[tecy (inc tecx)]]
+        :bot [[(inc tecy) tecx]])
       )
     :ghost
     (let [orig-map (turn-api-coords-to-accepted (:map api-map))]

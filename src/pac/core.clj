@@ -4,7 +4,11 @@
             [pac.protocol :as protocol])
   (:import (java.security MessageDigest)))
 
-(def base-url "http://10.30.0.114/dev/ClientService.svc")
+(def dev-url "http://10.30.0.114/dev/ClientService.svc")
+(def dev-pwd "gkOOdYu9")
+
+(def prod-url "http://10.30.0.114/prod/ClientService.svc")
+(def prod-pwd "DRI9idEoD91j")
 
 (defn sha1-str [s]
   (->> (-> "sha1"
@@ -29,10 +33,6 @@
                      secret
                      (str team ":" client ":" session ":" sequence))})
 
-(def luke       (partial auth "Inventi" 5668 "gkOOdYu9" "Luke" ))
-(def vader      (partial auth "Inventi" 5659 "gkOOdYu9" "Vader"))
-(def inventi-dev(partial auth "Inventi" 5660 "gkOOdYu9"  "Karolis"))
-
 (defonce sq (atom 1))
 
 (defn post-params [player session body]
@@ -40,12 +40,12 @@
   {:body
    (cheshire/generate-string
      (merge body
-            {:Auth (auth "Inventi" session "gkOOdYu9" player @sq)}))
+            {:Auth (auth "Inventi" session dev-pwd player @sq)}))
    :headers {"Content-Type" "application/json"}})
 
 (defn post [player session path body]
   (http/post
-    (str base-url (str "/json/" path))
+    (str dev-url (str "/json/" path))
     (post-params player session body)))
 
 (defn create-player [player session]
@@ -76,6 +76,3 @@
     (reset! turn (protocol/turn body))
     (protocol/game-map body)))
 
-(defn first-do []
-  (create-player "Luke4" 1234)
-  (create-player "Luke5" 1235))

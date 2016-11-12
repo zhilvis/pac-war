@@ -24,12 +24,19 @@
 (defn game-map [{:keys [Map TecmanPosition GhostPositions]}]
   (let [{:keys [Width Height Rows]} Map
         cell-by-char {\# {:type :wall} \. {:type :cookie}}
-        rows (->> Rows (map vec) (mapv #(mapv cell-by-char %)))]
-    {:width Width
-     :height Height
-     :map rows
-     :tecman-position (to-position-vector TecmanPosition)
-     :ghost-positions (mapv to-position-vector GhostPositions)}))
+        rows (->> Rows (map vec) (mapv #(mapv cell-by-char %)))
+        tecman-pos (to-position-vector TecmanPosition)
+        ghost-poses (mapv to-position-vector GhostPositions)]
+    {:width           Width
+     :height          Height
+     :map             (-> rows
+                          (assoc-in tecman-pos {:type :tecman})
+                          (assoc-in (ghost-poses 0) {:type :ghost})
+                          (assoc-in (ghost-poses 1) {:type :ghost})
+                          (assoc-in (ghost-poses 2) {:type :ghost})
+                          (assoc-in (ghost-poses 3) {:type :ghost}))
+     :tecman-position tecman-pos
+     :ghost-positions ghost-poses}))
 
 (defn positions-req [position-vectors]
   {:Positions (map to-position-map position-vectors)})
@@ -39,19 +46,19 @@
   (def player-view-resp
     {:Turn                   1
      :Mode                   "TECMAN"
-     :Map                    {:Width  10
-                              :Height 7
+     :Map                    {:Width  6
+                              :Height 5
                               :Rows   ["######",
                                        "#    #",
                                        "#.##.#",
-                                       "#....#",
+                                       "# . .#",
                                        "######"]}
-     :TecmanPosition         {:Row 5, :Col 6}
+     :TecmanPosition         {:Row 1, :Col 4}
      :PreviousTecmanPosition {:Row 4, :Col 6}
-     :GhostPositions         [{:Row 1, :Col 9}
-                              {:Row 2, :Col 8}
-                              {:Row 3, :Col 7}
-                              {:Row 4, :Col 6}]
+     :GhostPositions         [{:Row 1, :Col 1}
+                              {:Row 1, :Col 1}
+                              {:Row 1, :Col 2}
+                              {:Row 1, :Col 2}]
      :PreviousGhostPositions [{:Row 1, :Col 9}
                               {:Row 2, :Col 8}
                               {:Row 3, :Col 7}

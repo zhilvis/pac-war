@@ -28,20 +28,28 @@
                      secret
                      (str team ":" client ":" session ":" sequence))})
 
-(def luke (partial auth "Inventi" 5658 "gkOOdYu9" "Luke" ))
-(def vader (partial auth "Inventi" 5659  "gkOOdYu9" "Vader"))
+(def luke       (partial auth "Inventi" 5668 "gkOOdYu9" "Luke" ))
+(def vader      (partial auth "Inventi" 5659 "gkOOdYu9" "Vader"))
+(def inventi-dev(partial auth "Inventi" 5660 "gkOOdYu9"  "Karolis"))
 
-(defn create-player [auth]
+(def sq (atom 1))
+
+(defn post [player session path body]
+  (http/post
+    (str base-url (str "/json/" path))
+    {:body (cheshire/generate-string
+             {:Auth (auth "Inventi" session "gkOOdYu9" player @sq)})
+     :headers {"Content-Type" "application/json"}}))
+
+(defn create-player [player session]
   "Registers a player. Returns player id which
   should be used in follow-up requests"
-  (let [response (http/post
-                   (str base-url "/json/CreatePlayer")
-                   {:body    (cheshire/generate-string {:Auth (auth 1)})
-                    :headers {"Content-Type" "application/json"}})
+  (println "create" auth)
+  (let [response (post player session "CreatePlayer" {})
         body (:body @response)]
     (cheshire/parse-string body keyword)))
 
 
 (defn first-do []
-  (create-player (luke 1))
-  (create-player (vader 1)))
+  (create-player "Luke1" 1234)
+  (create-player "Luke2" 1235))

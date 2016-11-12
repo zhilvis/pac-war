@@ -1,6 +1,7 @@
 (ns pac.core
   (:require [org.httpkit.client :as http]
-            [cheshire.core :as cheshire])
+            [cheshire.core :as cheshire]
+            [pac.protocol :as protocol])
   (:import (java.security MessageDigest)))
 
 (def base-url "http://10.30.0.114/dev/ClientService.svc")
@@ -56,10 +57,24 @@
     (cheshire/parse-string body keyword)))
 
 
+(defonce turn (atom 0))
+
+(defn wait-next-turn [player session player-id]
+  (loop []
+    (let [response (post player session "WaitNextTurn" {:PlayerId player-id
+                                                        :RefTurn  @turn})
+          body (cheshire/parse-string (:body @response) keyword)]
+      (println body)
+      (if-not (:TurnComplete body)
+        (recur)
+        true))))
+
 (defn get-player-view [player session player-id]
   (let [response (post player session "GetPlayerView" {:PlayerId player-id})
-        body (:body @response)]
-    (cheshire/parse-string body keyword)))
+        body (cheshire/parse-string (:body @response) keyword)]
+    (protocol/status-ok? body)
+    (reset! turn (protocol/turn body))
+    (protocol/game-map body)))
 
 (defn first-do []
   (create-player "Luke4" 1234)

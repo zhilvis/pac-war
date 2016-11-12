@@ -85,3 +85,8 @@
     (protocol/status-ok? body)
     nil))
 
+
+(defn do-move [player session player-id coords]
+  (wait-next-turn player session player-id)
+  (println (get-player-view player session player-id))
+  (perform-move player session player-id coords))

@@ -72,7 +72,16 @@
 (defn get-player-view [player session player-id]
   (let [response (post player session "GetPlayerView" {:PlayerId player-id})
         body (cheshire/parse-string (:body @response) keyword)]
+    (println body)
+    (when (protocol/status-ok? body)
+      (do (reset! turn (protocol/turn body))
+          (protocol/game-map body)))))
+
+(defn perform-move [player session player-id coords]
+  (let [response (post player session "PerformMove" (merge {:PlayerId player-id}
+                                                           (protocol/positions-req coords)))
+        body (cheshire/parse-string (:body @response) keyword)]
+    (println body)
     (protocol/status-ok? body)
-    (reset! turn (protocol/turn body))
-    (protocol/game-map body)))
+    nil))
 

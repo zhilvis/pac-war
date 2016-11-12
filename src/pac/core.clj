@@ -38,7 +38,7 @@
                    {:body    (cheshire/generate-string {:Auth (auth 1)})
                     :headers {"Content-Type" "application/json"}})
         body (:body @response)]
-    (cheshire/parse-string body)))
+    (cheshire/parse-string body keyword)))
 
 (defn foo
   "I don't do a whole lot."

@@ -52,6 +52,7 @@
   (let [session-id (int (* 10000 (Math/random)))
         player-name (str "Inventi-" session-id)
         player-id (create-player player-name session-id)]
+    (println (str "Playing as: " player-name))
     (loop []
       (reset! turn 0)
       (play-until-completes player-name session-id player-id)

@@ -297,9 +297,9 @@
                      (= (:type %) :bean))
            (filter some?
              (map (fn [xi yi] (elem-or-nil original xi yi))
-                 (surround-coords x y))))])
+                 (surround-coords x y))))]
   (if (= 0 (count moves))
-    nil)
+    nil))
   )
 
 (defn is-ghost-close [original move-stack]
@@ -324,20 +324,22 @@
    ]))))
 
 (defn hitting-wall-turn [original
-                         [[xgprev ygprev]
-                          [xcurr ycurr]]]
+                         [[ygprev xgprev]
+                          [ycurr xcurr]]]
   (let [[mx my] [(- xcurr xgprev)
                  (- ycurr ygprev)]
         next-turn [(+ xcurr mx)
                    (+ ycurr my)]]
     (if (is-wall-next-to-ghost
           original
-          [xcurr ycurr]
+          [ycurr xcurr]
           [mx my])
-      (random-direction original [xcurr ycurr])
+      (let [[xn yn] (random-direction original [xcurr ycurr])]
+        [yn xn])
       next-turn)))
 
 (defn external-advice-turn [api-map]
+  (println api-map)
   (case (:mode api-map)
     :tecman
     (let [[tecx tecy] (:tecman-position api-map)

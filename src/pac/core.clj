@@ -56,6 +56,11 @@
     (cheshire/parse-string body keyword)))
 
 
+(defn get-player-view [player session player-id]
+  (let [response (post player session "GetPlayerView" {:PlayerId player-id})
+        body (:body @response)]
+    (cheshire/parse-string body keyword)))
+
 (defn first-do []
   (create-player "Luke4" 1234)
   (create-player "Luke5" 1235))

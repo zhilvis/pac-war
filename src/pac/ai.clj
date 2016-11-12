@@ -330,10 +330,12 @@
                  (- ycurr ygprev)]
         next-turn [(+ xcurr mx)
                    (+ ycurr my)]]
-    (if (is-wall-next-to-ghost
-          original
-          [ycurr xcurr]
-          [mx my])
+    (if (or
+          (is-wall-next-to-ghost
+            original
+            [ycurr xcurr]
+            [mx my])
+          (= [0 0] [mx my]))
       (let [[xn yn] (random-direction original [xcurr ycurr])]
         [yn xn])
       next-turn)))

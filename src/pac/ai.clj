@@ -215,7 +215,6 @@
   (let [pac-pos (first (pacman-pos original))
         [left-part top-part right-part bot-part]
         (parition-teritories pac-pos (last-coords-for-orig original))]
-    (println "aero" pac-pos)
     (mapv #(* weight %)
      [(eval-func
        (sub-map original left-part))

@@ -276,7 +276,8 @@
     api-coords))
 
 (defn external-advice-turn [api-map]
-  (if (= :tecman (:mode api-map))
+  (case (:mode api-map)
+    :tecman
     (let [[tecx tecy] (:tecman-position api-map)
           conv-map (turn-api-coords-to-accepted (:map api-map))
           [left top bot right]
@@ -294,4 +295,6 @@
         :top [[tecx (dec tecy)]]
         :right [[(inc tecx) tecy]]
         :bot [[tecx (inc tecy)]])
-      )))
+      )
+    :ghost
+    (:ghost-positions api-map)))

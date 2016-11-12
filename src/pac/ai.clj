@@ -297,10 +297,9 @@
                      (= (:type %) :bean))
            (filter some?
              (map (fn [xi yi] (elem-or-nil original xi yi))
-                 (surround-coords x y))))])
-  (if (= 0 (count moves))
-    nil)
-  )
+                 (surround-coords x y))))]
+    (if (= 0 (count moves))
+      nil)))
 
 (defn is-ghost-close [original move-stack]
   

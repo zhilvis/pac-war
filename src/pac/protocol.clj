@@ -1,13 +1,19 @@
 (ns pac.protocol)
 
+(defn status-error? [resp]
+  (#{"FAIL" "AUTH"} (:Status resp)))
+
+(defn ensure-no-errors [resp]
+  (when (status-error? resp)
+    (throw (IllegalStateException. (str "Response status: " (:Status resp) ", message: " (:Message resp))))))
+
 (defn status-ok? [resp]
+  (ensure-no-errors resp)
   (= "OK" (:Status resp)))
 
 (defn status-wait? [resp]
+  (ensure-no-errors resp)
   (= "WAIT" (:Status resp)))
-
-(defn status-error? [resp]
-  (#{"FAIL" "AUTH"} (:Status resp)))
 
 (defn to-position-vector [{:keys [Row Col]}]
   [Row Col])

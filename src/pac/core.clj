@@ -22,7 +22,9 @@
           body (cheshire/parse-string (:body @response) keyword)]
       (println "WaitNextTurn" body)
       (if-not (:TurnComplete body)
-        (recur)
+        (do
+          (Thread/sleep 3000)
+          (recur))
         (not (:GameFinished body))))))
 
 (defn get-player-view [player session player-id]

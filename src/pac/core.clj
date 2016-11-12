@@ -28,7 +28,8 @@
                      secret
                      (str team ":" client ":" session ":" sequence))})
 
-(def inventi-dev (partial auth "Inventi" 5658 "gkOOdYu9" "Karolis"))
+(def luke (partial auth "Inventi" 5658 "gkOOdYu9" "Luke" ))
+(def vader (partial auth "Inventi" 5659  "gkOOdYu9" "Vader"))
 
 (defn create-player [auth]
   "Registers a player. Returns player id which
@@ -40,7 +41,7 @@
         body (:body @response)]
     (cheshire/parse-string body keyword)))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+
+(defn first-do []
+  (create-player (luke 1))
+  (create-player (vader 1)))

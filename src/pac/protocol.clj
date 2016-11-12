@@ -24,13 +24,14 @@
 (defn to-position-map [[y x]]
   {:Row y :Col x})
 
-(defn game-map [{:keys [Map TecmanPosition GhostPositions]}]
+(defn game-map [{:keys [Mode Map TecmanPosition GhostPositions]}]
   (let [{:keys [Width Height Rows]} Map
         cell-by-char {\# {:type :wall} \. {:type :cookie}}
         rows (->> Rows (map vec) (mapv #(mapv cell-by-char %)))
         tecman-pos (to-position-vector TecmanPosition)
         ghost-poses (mapv to-position-vector GhostPositions)]
-    {:width           Width
+    {:mode            (if (= "TECMAN" Mode) :tecman :ghost)
+     :width           Width
      :height          Height
      :map             (-> rows
                           (assoc-in tecman-pos {:type :tecman})

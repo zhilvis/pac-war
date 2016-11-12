@@ -28,7 +28,7 @@
                      secret
                      (str team ":" client ":" session ":" sequence))})
 
-(def inventi-dev (partial auth "Inventi" 5658 "Karolis" "gkOOdYu9"))
+(def inventi-dev (partial auth "Inventi" 5658 "gkOOdYu9" "Karolis"))
 
 (defn create-player [auth]
   "Registers a player. Returns player id which

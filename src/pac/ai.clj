@@ -172,6 +172,12 @@
               (= :pacman (:type %1))
               (= :wall (:type %2)))))
 
+(def is-wall-next-to-ghost
+  (partial is-something-next-to-something
+           #(and
+              (= :ghost (:type %1))
+              (= :wall (:type %2)))))
+
 (defn last-coords-for-orig [original]
   [(dec (count (first original))) (dec (count original))])
 
@@ -275,6 +281,62 @@
                      {:type :space})) %)
     api-coords))
 
+(defn surround-coords [x y]
+  [
+   [(dec x) y]
+   [x (dec y)]
+   [(inc x) y]
+   [x (inc y)]
+   ]
+  )
+
+(defn moves-for-turn [original step [x y]]
+  (let [moves 
+         (filterv #(or
+                     (= (:type %) :space)
+                     (= (:type %) :bean))
+           (filter some?
+             (map (fn [xi yi] (elem-or-nil original xi yi))
+                 (surround-coords x y))))])
+  (if (= 0 (count moves))
+    nil)
+  )
+
+(defn is-ghost-close [original move-stack]
+  
+  )
+
+(defn random-direction [original [x y]]
+  (rand-nth
+   (filter some?
+   (map
+    (fn [[xi yi]]
+      (if-let [el (elem-or-nil original xi yi)]
+        (if (not= :wall (:type el))
+          [xi yi]
+          )
+        ))
+   [
+     [(dec x) y]
+     [x (dec y)]
+     [(inc x) y]
+     [x (inc y)]
+   ]))))
+
+(defn hitting-wall-turn [original
+                         [[xgprev ygprev]
+                          [xcurr ycurr]]]
+  (let [[mx my] [(- xcurr xgprev)
+                 (- ycurr ygprev)]
+        next-turn [(+ xcurr mx)
+                   (+ ycurr my)]]
+    (if (is-wall-next-to-ghost
+          original
+          [xcurr ycurr]
+          [mx my])
+      (random-direction original [xcurr ycurr])
+      next-turn)))
+
 (defn external-advice-turn [api-map]
   (case (:mode api-map)
     :tecman
@@ -297,4 +359,9 @@
         :bot [[tecx (inc tecy)]])
       )
     :ghost
-    (:ghost-positions api-map)))
+    (let [orig-map (turn-api-coords-to-accepted (:map api-map))]
+       (mapv
+       #(hitting-wall-turn orig-map [%1 %2])
+       (:ghost-previous-positions api-map)
+       (:ghost-positions api-map)))
+    ))

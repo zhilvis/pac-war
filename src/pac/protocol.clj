@@ -9,10 +9,19 @@
 (defn status-error? [resp]
   (#{"FAIL" "AUTH"} (:Status resp)))
 
-(defn game-map [{:keys [Map]}]
+(defn to-position-vector [{:keys [Row Col]}]
+  [Row Col])
+
+(defn to-position-map [[y x]]
+  {:Row y :Col x})
+
+(defn game-map [{:keys [Map TecmanPosition GhostPositions]}]
   (let [{:keys [Rows]} Map
-        cell-by-char {\# {:type :wall} \. {:type :cookie}}]
-    {:map (->> Rows (map vec) (mapv #(mapv cell-by-char %)))}))
+        cell-by-char {\# {:type :wall} \. {:type :cookie}}
+        rows (->> Rows (map vec) (mapv #(mapv cell-by-char %)))]
+    {:map rows
+     :tecman-position (to-position-vector TecmanPosition)
+     :ghost-positions (mapv to-position-vector GhostPositions)}))
 
 (comment
 

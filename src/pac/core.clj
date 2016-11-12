@@ -2,6 +2,7 @@
   (:require [org.httpkit.client :as http]
             [cheshire.core :as cheshire]
             [pac.protocol :as protocol]
+            [pac.ai :as ai]
             [pac.auth :refer [post]])
   (:import (java.security MessageDigest)))
 

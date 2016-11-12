@@ -25,6 +25,9 @@
      :tecman-position (to-position-vector TecmanPosition)
      :ghost-positions (mapv to-position-vector GhostPositions)}))
 
+(defn positions-req [position-vectors]
+  {:Positions (map to-position-map position-vectors)})
+
 (comment
 
   (def player-view-resp
@@ -58,4 +61,6 @@
 
   (game-map player-view-resp)
 
+  (positions-req [[5 6]])
+  
   )

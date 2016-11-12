@@ -344,7 +344,7 @@
   (println api-map)
   (case (:mode api-map)
     :tecman
-    (let [[tecx tecy] (:tecman-position api-map)
+    (let [[tecy tecx] (:tecman-position api-map)
           conv-map (turn-api-coords-to-accepted (:map api-map))
           [left top bot right]
           (score-turn-for-pacman conv-map)

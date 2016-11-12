@@ -15,6 +15,9 @@
   (ensure-no-errors resp)
   (= "WAIT" (:Status resp)))
 
+(defn turn [{:keys [Turn]}]
+  (if Turn Turn 0))
+
 (defn to-position-vector [{:keys [Row Col]}]
   [Row Col])
 
@@ -72,6 +75,8 @@
  
   (status-error? player-view-resp)
 
+  (turn player-view-resp)
+  
   (game-map player-view-resp)
 
   (positions-req [[5 6]])

@@ -202,6 +202,11 @@
     original @WEIGHT-GHOST-NEXT is-ghost-next-to-pacman))
 
 ; score when ghost is immediately to pacman
+(defn score-immediate-bean [original]
+  (round-and-weight-functions
+    original @WEIGHT-BEAN-NEXT is-bean-next-to-pacman))
+
+; score when ghost is immediately to pacman
 (defn score-wall [original]
   (round-and-weight-functions
     original @WEIGHT-WALL-NEXT is-wall-next-to-pacman))
@@ -239,16 +244,18 @@
 (defn score-turn-for-pacman [original]
   (let [[danger-left danger-top danger-right danger-bot :as dvec]
         (score-immediate-danger original)
+        imbean (score-immediate-bean original)
         [wall-left wall-top wall-right wall-bot :as wvec]
         (score-wall original)
         [ghosts-left ghosts-top ghosts-right ghosts-bot :as gvec]
         (score-ghost-teritories original)
         [beans-left beans-top beans-right beans-bot :as bvec]
         (score-bean-teritories original)
-        final-vec (apply mapv + [dvec wvec gvec bvec])
+        final-vec (apply mapv + [dvec imbean wvec gvec bvec])
         ]
     (print-positional "GHOST NEXT:" dvec)
     (print-positional "WALL NEXT:" wvec)
+    (print-positional "BEAN NEXT:" imbean)
     (print-positional "GHOST TERRITORY:" gvec)
     (print-positional "GHOST TERRITORY:" bvec)
     (print-positional "FINAL SCORE: " final-vec)

@@ -32,9 +32,10 @@
 (def vader      (partial auth "Inventi" 5659 "gkOOdYu9" "Vader"))
 (def inventi-dev(partial auth "Inventi" 5660 "gkOOdYu9"  "Karolis"))
 
-(def sq (atom 1))
+(defonce sq (atom 1))
 
 (defn post-params [player session body]
+  (swap! sq inc)
   {:body
    (cheshire/generate-string
      (merge body
@@ -56,5 +57,5 @@
 
 
 (defn first-do []
-  (create-player "Luke1" 1234)
-  (create-player "Luke2" 1235))
+  (create-player "Luke4" 1234)
+  (create-player "Luke5" 1235))

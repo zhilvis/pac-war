@@ -34,12 +34,17 @@
 
 (def sq (atom 1))
 
+(defn post-params [player session body]
+  {:body
+   (cheshire/generate-string
+     (merge body
+            {:Auth (auth "Inventi" session "gkOOdYu9" player @sq)}))
+   :headers {"Content-Type" "application/json"}})
+
 (defn post [player session path body]
   (http/post
     (str base-url (str "/json/" path))
-    {:body (cheshire/generate-string
-             {:Auth (auth "Inventi" session "gkOOdYu9" player @sq)})
-     :headers {"Content-Type" "application/json"}}))
+    (post-params player session body)))
 
 (defn create-player [player session]
   "Registers a player. Returns player id which
